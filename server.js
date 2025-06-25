@@ -8,12 +8,17 @@ app.use(express.static('public')); // 静态文件服务
 
 // 日志中间件
 app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
 });
 
 const articleRoutes = require('./routes/articleRoutes');
 app.use('/api/articles', articleRoutes);
+
+const categoryRoutes = require('./routes/categoryRoutes');
+app.use('/api/category', categoryRoutes);
 
 app.listen(PORT, () => {
   console.log(`启动 http://localhost:${PORT}`);
@@ -21,9 +26,11 @@ app.listen(PORT, () => {
 
 // 用于测试
 app.get('/ces', (req, res) => {
-  res.send('测试');
+  res.json({
+    code:200,
+    data:'测试'
+  });
 });
-
 
 // 404 处理
 app.use((req, res) => {
@@ -35,9 +42,6 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('500 - Server Error');
 });
-
-
-
 
 // // 新增用户路由
 // app.get('/users', (req, res) => {
