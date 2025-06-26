@@ -1,35 +1,36 @@
 const router = require('express').Router();
+// const authMiddleware = require("../middleware/authMiddleware")
+const Article = require("../models/article.model")
 
 // 分页获取文章列表
 router.get('/getArticleByPage', (req, res) => {
-    console.log('getArticleByPage')
-    res.json({
-        code: 200,
-        data: [{
-            id:'12',
-            title:'后端返回标题',
-            description:'后端返回描述',
-            date:'2020-09-08 15:30:30',
-            category:'后端返回类别',
-            readCount:0
-        },
-    {
-            id:'122',
-            title:'后端返回标题1',
-            description:'后端返回描述1',
-            date:'2020-09-08 15:30:32',
-            category:'后端返回类别1',
-            readCount:1
-        },
-    {
-            id:'1222',
-            title:'后端返回标题2',
-            description:'后端返回描述2',
-            date:'2020-09-08 15:30:33',
-            category:'后端返回类别2',
-            readCount:2
-        },],
-        message: 'success',
+    console.log(req.query)
+    Article.searchArticle(req.query).then(result => {
+        console.log(result)
+        res.json({
+            code: 200,
+            data: result,
+            message: 'success',
+        })
+    }).catch((error) => {
+        console.log(error)
+        res.status(500).json({ message: '服务器错误' })
+    })
+});
+
+// 通过ID获取文章详情
+router.get('/getArticleById', (req, res) => {
+    console.log(req.query)
+    Article.searchSingleArticle(req.query.id).then(result => {
+        console.log(result)
+        res.json({
+            code: 200,
+            data: result,
+            message: 'success',
+        })
+    }).catch((error) => {
+        console.log(error)
+        res.status(500).json({ message: '服务器错误' })
     })
 });
 

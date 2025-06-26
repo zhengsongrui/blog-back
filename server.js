@@ -1,6 +1,10 @@
+require('dotenv').config();
 const express = require('express');
+const authMiddleware = require('./middleware/authMiddleware');
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+
+console.log(process.env)
 
 // 中间件
 app.use(express.json()); // 解析 JSON 请求体
@@ -14,22 +18,18 @@ app.use((req, res, next) => {
   next();
 });
 
+
 const articleRoutes = require('./routes/articleRoutes');
 app.use('/api/articles', articleRoutes);
 
 const categoryRoutes = require('./routes/categoryRoutes');
 app.use('/api/category', categoryRoutes);
 
+const userRoutes = require('./routes/userRoutes');
+app.use('/api/user', userRoutes);
+
 app.listen(PORT, () => {
   console.log(`启动 http://localhost:${PORT}`);
-});
-
-// 用于测试
-app.get('/ces', (req, res) => {
-  res.json({
-    code:200,
-    data:'测试'
-  });
 });
 
 // 404 处理
