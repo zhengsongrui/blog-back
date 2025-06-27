@@ -6,17 +6,17 @@ const authMiddleware = async (req, res, next) => {
     const token = JwtUtils.extractToken(req);
     
     if (!token) {
-      // return res.status(401).json({
-      //       code:401,
-      //       message:"未提供认证令牌"
-      //   });
+      return res.status(401).json({
+            code:401,
+            message:"未提供认证令牌"
+        });
       // 未登录时不验证对象，返回用户id为1的数据
-      req.user = {
-        id:1,
-        username:"zhengsongrui"
-      }
-      next();
-      return false
+      // req.user = {
+      //   id:1,
+      //   username:"zhengsongrui"
+      // }
+      // next();
+      // return false
     }
 
     // 2. 验证 token

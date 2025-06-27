@@ -15,7 +15,9 @@ const User = {
         const [rows] = await pool.query(
             'SELECT * FROM user WHERE username = ? && password = ?',
             [username, password]
-        );
+        ).catch(err=>{
+            console.log(err)
+        })
         if (rows[0]) {
             return {
                 id: rows[0].id,

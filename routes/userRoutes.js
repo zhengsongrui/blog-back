@@ -33,13 +33,13 @@ router.post('/login', (req, res) => {
             })
         }
     }).catch(err => {
+        console.log(err)
         res.status(500).json({message:'服务器错误'})
     })
 });
 
 // 根据token查询用户
 // router.get('/findUser', (req, res) => {
-//     console.log(req.user)
 //     User.findById().then(result => {
        
 //     }).catch(err => {

@@ -4,7 +4,7 @@ const authMiddleware = require('./middleware/authMiddleware');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-console.log(process.env)
+// console.log(process.env)
 
 // 中间件
 app.use(express.json()); // 解析 JSON 请求体
