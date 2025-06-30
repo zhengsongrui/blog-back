@@ -52,7 +52,6 @@ router.put("/updateCategory", strictAuthMiddleware, (req, res) => {
 
 // 删除分类
 router.delete("/deleteCategory/:id", strictAuthMiddleware, (req, res) => {
-  console.log(req.params);
   Article.searchArticleCountByCategory(req.params.id)
     .then((result) => {
       if (result.total>0) {

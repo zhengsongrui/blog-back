@@ -1,6 +1,9 @@
 require('dotenv').config();
 const express = require('express');
-const authMiddleware = require('./middleware/authMiddleware');
+const https = require('https');
+const http = require('http');
+const path = require('path');
+const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -8,7 +11,10 @@ const PORT = process.env.PORT || 3000;
 
 // 中间件
 app.use(express.json()); // 解析 JSON 请求体
-app.use(express.static('public')); // 静态文件服务
+
+// 配置静态文件目录（托管前端构建文件）
+const frontendBuildPath = path.join(__dirname, '/public');
+app.use(express.static(frontendBuildPath));
 
 // 日志中间件
 app.use((req, res, next) => {
@@ -28,9 +34,28 @@ app.use('/api/category', categoryRoutes);
 const userRoutes = require('./routes/userRoutes');
 app.use('/api/user', userRoutes);
 
-app.listen(PORT, () => {
-  console.log(`启动 http://localhost:${PORT}`);
-});
+
+
+const options = {
+  key: fs.readFileSync('./ssl/server.key'),
+  cert: fs.readFileSync('./ssl/server.crt')
+};
+
+https.createServer(options, app)
+  .listen(443, () => console.log(`App listening on port 443!`));
+
+  http.createServer(app)
+  .listen(PORT, () => console.log(`App listening on port ${PORT}!`));
+
+// // 所有其他请求返回前端应用（支持前端路由）
+// app.get('/', (req, res) => {
+//   console.log(path.join(frontendBuildPath, '/blog_front/index.html'))
+//   res.sendFile(path.join(frontendBuildPath, '/blog_front/index.html'));
+// });
+
+// app.get('/test', (req, res) => {
+//   res.send('1234')
+// });
 
 // 404 处理
 app.use((req, res) => {
@@ -43,23 +68,4 @@ app.use((err, req, res, next) => {
   res.status(500).send('500 - Server Error');
 });
 
-// // 新增用户路由
-// app.get('/users', (req, res) => {
-//   res.json([
-//     { id: 1, name: 'Alice' },
-//     { id: 2, name: 'Bob' }
-//   ]);
-// });
 
-// // 带参数的路由
-// app.get('/users/:id', (req, res) => {
-//   const userId = parseInt(req.params.id);
-//   res.json({ id: userId, name: `User ${userId}` });
-// });
-
-// // POST 请求处理 (需解析请求体)
-// app.post('/users', express.json(), (req, res) => {
-//   const newUser = req.body;
-//   console.log('Creating user:', newUser);
-//   res.status(201).json({ message: 'User created', user: newUser });
-// });
