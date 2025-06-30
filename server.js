@@ -15,6 +15,8 @@ app.use(express.json()); // 解析 JSON 请求体
 // 配置静态文件目录（托管前端构建文件）
 const frontendBuildPath = path.join(__dirname, '/public');
 app.use(express.static(frontendBuildPath));
+// 提供静态文件访问
+app.use('/uploads', express.static('uploads'));
 
 // 日志中间件
 app.use((req, res, next) => {
@@ -34,6 +36,8 @@ app.use('/api/category', categoryRoutes);
 const userRoutes = require('./routes/userRoutes');
 app.use('/api/user', userRoutes);
 
+const uploadRoutes = require('./routes/uploadRoutes');
+app.use('/api/upload', uploadRoutes);
 
 
 const options = {
@@ -57,6 +61,7 @@ https.createServer(options, app)
 //   res.send('1234')
 // });
 
+
 // 404 处理
 app.use((req, res) => {
   res.status(404).send('404 - Not Found');
@@ -65,7 +70,14 @@ app.use((req, res) => {
 // 错误处理
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send('500 - Server Error');
+  // res.status(500).send('500 - Server Error');
+   if (err instanceof multer.MulterError) {
+    // Multer 错误（如文件大小超限）
+    res.status(400).json({ error: err.message });
+  } else {
+    // 其他错误
+    res.status(500).json({ error: err.message });
+  }
 });
 
 
