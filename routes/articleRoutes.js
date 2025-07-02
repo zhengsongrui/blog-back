@@ -29,6 +29,7 @@ router.get("/getArticleById", authMiddleware, (req, res) => {
         message: "success",
       });
       Article.addArticleReadCount(req.query.id);
+      Article.insertUserArticle(req.query.id, req.user);
     })
     .catch((error) => {
       console.log(error);
@@ -103,6 +104,27 @@ router.put("/updateArticle", strictAuthMiddleware, (req, res) => {
           console.log(error);
           res.status(500).json({ message: "服务器错误" });
         });
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).json({ message: "服务器错误" });
+    });
+});
+
+// 获取文章浏览记录
+router.get("/getArticleBrowsingHistory", authMiddleware, (req, res) => {
+  Article.selectUserArticle(req.user)
+    .then((result) => {
+      res.json({
+        code: 200,
+        data: result,
+        message: "success",
+      });
+      Article.selectUserArticlNum(req.user).then((total)=>{
+        if(total>70){
+          Article.deleteUserArticleOld50()
+        }
+      })
     })
     .catch((error) => {
       console.log(error);

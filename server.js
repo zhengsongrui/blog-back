@@ -5,7 +5,7 @@ const http = require('http');
 const path = require('path');
 const fs = require('fs');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const SERVER_PORT = process.env.SERVER_PORT || 3000;
 
 // console.log(process.env)
 
@@ -49,7 +49,7 @@ https.createServer(options, app)
   .listen(443, () => console.log(`App listening on port 443!`));
 
   http.createServer(app)
-  .listen(PORT, () => console.log(`App listening on port ${PORT}!`));
+  .listen(SERVER_PORT, () => console.log(`App listening on port ${SERVER_PORT}!`));
 
 // // 所有其他请求返回前端应用（支持前端路由）
 // app.get('/', (req, res) => {

@@ -50,7 +50,7 @@ router.post(
       }
 
       // 返回文件访问路径（需根据实际环境配置）
-      const fileUrl = `${process.env.ORIGIN}:${process.env.PORT}/uploads/${req.user.username}/${req.file.filename}`;
+      const fileUrl = `${process.env.FILE_ORIGIN}:${process.env.SERVER_PORT}/uploads/${req.user.username}/${req.file.filename}`;
       res.json({
         message: "上传成功",
         code: 200,
