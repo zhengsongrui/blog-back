@@ -21,11 +21,11 @@ const storage = multer.diskStorage({
 
 // 文件过滤器（可选）
 const fileFilter = (req, file, cb) => {
-  const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
+  const allowedTypes = ["image/jpeg", "image/png", "image/gif","image/webp"];
   if (allowedTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error("只允许上传 JPG, PNG 或 GIF 图片"), false);
+    cb(new Error("只允许上传 JPG, PNG , webp 或 GIF 图片"), false);
   }
 };
 
@@ -50,7 +50,7 @@ router.post(
       }
 
       // 返回文件访问路径（需根据实际环境配置）
-      const fileUrl = `${process.env.FILE_ORIGIN}:${process.env.SERVER_PORT}/uploads/${req.user.username}/${req.file.filename}`;
+      const fileUrl = `${process.env.FILE_ORIGIN}/uploads/${req.user.username}/${req.file.filename}`;
       res.json({
         message: "上传成功",
         code: 200,
